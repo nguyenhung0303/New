@@ -43,13 +43,13 @@
             this.hWindowControl1.ImagePart = new System.Drawing.Rectangle(0, 0, 640, 480);
             this.hWindowControl1.Location = new System.Drawing.Point(21, 12);
             this.hWindowControl1.Name = "hWindowControl1";
-            this.hWindowControl1.Size = new System.Drawing.Size(750, 377);
+            this.hWindowControl1.Size = new System.Drawing.Size(1087, 595);
             this.hWindowControl1.TabIndex = 0;
-            this.hWindowControl1.WindowSize = new System.Drawing.Size(750, 377);
+            this.hWindowControl1.WindowSize = new System.Drawing.Size(1087, 595);
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(122, 428);
+            this.btnStart.Location = new System.Drawing.Point(197, 613);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(75, 23);
             this.btnStart.TabIndex = 1;
@@ -59,7 +59,7 @@
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(498, 428);
+            this.btnStop.Location = new System.Drawing.Point(398, 613);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(75, 23);
             this.btnStop.TabIndex = 2;
@@ -76,23 +76,24 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(800, 554);
+            this.panel1.Size = new System.Drawing.Size(1120, 648);
             this.panel1.TabIndex = 3;
             // 
             // btnReadQR
             // 
-            this.btnReadQR.Location = new System.Drawing.Point(322, 428);
+            this.btnReadQR.Location = new System.Drawing.Point(299, 613);
             this.btnReadQR.Name = "btnReadQR";
             this.btnReadQR.Size = new System.Drawing.Size(75, 23);
             this.btnReadQR.TabIndex = 3;
             this.btnReadQR.Text = "QR";
             this.btnReadQR.UseVisualStyleBackColor = true;
+            this.btnReadQR.Click += new System.EventHandler(this.btnReadQR_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 554);
+            this.ClientSize = new System.Drawing.Size(1120, 648);
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
             this.Text = "Form1";
