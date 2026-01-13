@@ -52,9 +52,10 @@
             this.hWindowControl1.ImagePart = new System.Drawing.Rectangle(0, 0, 640, 480);
             this.hWindowControl1.Location = new System.Drawing.Point(0, 0);
             this.hWindowControl1.Name = "hWindowControl1";
-            this.hWindowControl1.Size = new System.Drawing.Size(838, 452);
+            this.hWindowControl1.Size = new System.Drawing.Size(905, 499);
             this.hWindowControl1.TabIndex = 0;
-            this.hWindowControl1.WindowSize = new System.Drawing.Size(838, 452);
+            this.hWindowControl1.WindowSize = new System.Drawing.Size(905, 499);
+           
             // 
             // panel1
             // 
@@ -63,7 +64,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1016, 452);
+            this.panel1.Size = new System.Drawing.Size(1083, 499);
             this.panel1.TabIndex = 3;
             // 
             // panel3
@@ -72,7 +73,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(838, 452);
+            this.panel3.Size = new System.Drawing.Size(905, 499);
             this.panel3.TabIndex = 7;
             // 
             // panel2
@@ -84,18 +85,18 @@
             this.panel2.Controls.Add(this.cbCamera);
             this.panel2.Controls.Add(this.btnReadQR);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(838, 0);
+            this.panel2.Location = new System.Drawing.Point(905, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(178, 452);
+            this.panel2.Size = new System.Drawing.Size(178, 499);
             this.panel2.TabIndex = 6;
             // 
             // uiLabel1
             // 
             this.uiLabel1.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.uiLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.uiLabel1.Location = new System.Drawing.Point(26, 134);
+            this.uiLabel1.Location = new System.Drawing.Point(26, 145);
             this.uiLabel1.Name = "uiLabel1";
-            this.uiLabel1.Size = new System.Drawing.Size(123, 23);
+            this.uiLabel1.Size = new System.Drawing.Size(123, 25);
             this.uiLabel1.TabIndex = 8;
             this.uiLabel1.Text = "Exposure (µs):\n\n\n\n";
             // 
@@ -103,10 +104,10 @@
             // 
             this.btnGetExposureRange.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnGetExposureRange.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnGetExposureRange.Location = new System.Drawing.Point(42, 202);
+            this.btnGetExposureRange.Location = new System.Drawing.Point(42, 219);
             this.btnGetExposureRange.MinimumSize = new System.Drawing.Size(1, 1);
             this.btnGetExposureRange.Name = "btnGetExposureRange";
-            this.btnGetExposureRange.Size = new System.Drawing.Size(100, 35);
+            this.btnGetExposureRange.Size = new System.Drawing.Size(100, 38);
             this.btnGetExposureRange.TabIndex = 7;
             this.btnGetExposureRange.Text = "Get Range";
             this.btnGetExposureRange.TipsFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -119,7 +120,7 @@
             0,
             0,
             0});
-            this.nudExposure.Location = new System.Drawing.Point(29, 159);
+            this.nudExposure.Location = new System.Drawing.Point(29, 172);
             this.nudExposure.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -131,7 +132,7 @@
             0,
             0});
             this.nudExposure.Name = "nudExposure";
-            this.nudExposure.Size = new System.Drawing.Size(120, 21);
+            this.nudExposure.Size = new System.Drawing.Size(120, 20);
             this.nudExposure.TabIndex = 6;
             this.nudExposure.Value = new decimal(new int[] {
             10000,
@@ -144,10 +145,10 @@
             // 
             this.btnRefresh.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnRefresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.btnRefresh.Location = new System.Drawing.Point(31, 49);
+            this.btnRefresh.Location = new System.Drawing.Point(31, 53);
             this.btnRefresh.MinimumSize = new System.Drawing.Size(1, 1);
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(100, 32);
+            this.btnRefresh.Size = new System.Drawing.Size(100, 35);
             this.btnRefresh.TabIndex = 5;
             this.btnRefresh.Text = "uiButton1";
             this.btnRefresh.TipsFont = new System.Drawing.Font("Microsoft Sans Serif", 9F);
@@ -160,12 +161,12 @@
             this.cbCamera.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.cbCamera.ItemHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(200)))), ((int)(((byte)(255)))));
             this.cbCamera.ItemSelectForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
-            this.cbCamera.Location = new System.Drawing.Point(9, 14);
+            this.cbCamera.Location = new System.Drawing.Point(9, 15);
             this.cbCamera.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cbCamera.MinimumSize = new System.Drawing.Size(63, 0);
             this.cbCamera.Name = "cbCamera";
             this.cbCamera.Padding = new System.Windows.Forms.Padding(0, 0, 30, 2);
-            this.cbCamera.Size = new System.Drawing.Size(140, 27);
+            this.cbCamera.Size = new System.Drawing.Size(140, 29);
             this.cbCamera.SymbolSize = 24;
             this.cbCamera.TabIndex = 4;
             this.cbCamera.Text = "uiComboBox1";
@@ -175,18 +176,18 @@
             // 
             // btnReadQR
             // 
-            this.btnReadQR.Location = new System.Drawing.Point(42, 110);
+            this.btnReadQR.Location = new System.Drawing.Point(42, 119);
             this.btnReadQR.Name = "btnReadQR";
-            this.btnReadQR.Size = new System.Drawing.Size(75, 21);
+            this.btnReadQR.Size = new System.Drawing.Size(75, 23);
             this.btnReadQR.TabIndex = 3;
             this.btnReadQR.Text = "QR";
             this.btnReadQR.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1016, 452);
+            this.ClientSize = new System.Drawing.Size(1083, 499);
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
             this.Text = "Form1";
