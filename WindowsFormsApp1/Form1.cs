@@ -1,251 +1,106 @@
-﻿using System;
+﻿using HalconDotNet;
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using HalconDotNet;
 
 namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
-        private HTuple _acqHandle = null;
-        private CancellationTokenSource _cts;
-        private volatile bool _running = false;
-
-        // lock để tránh GrabLoop và btnReadQR grab cùng lúc
-        private readonly object _camLock = new object();
-
-        // QR model handle (tạo 1 lần)
-        private HTuple _qrHandle = null;
+    
 
         public Form1()
         {
             InitializeComponent();
-            this.FormClosing += (s, e) => StopCam();
-            this.Load += Form1_Load;
+            
+        }
+        public class GigECamItem
+        {
+            public string Display { get; set; }   // chuỗi hiển thị
+            public string Device { get; set; }    // chuỗi Device dùng để OpenFramegrabber
+            public override string ToString() => Display;
+
+        }
+        private string _iface = "GigEVision2";   // GigE dùng GigEVision2 :contentReference[oaicite:2]{index=2}
+
+        private void LoadGigECameras()
+        {
+            cbCamera.Items.Clear();
+
+            try
+            {
+                // "device" => list các giá trị hợp lệ cho tham số Device của OpenFramegrabber :contentReference[oaicite:3]{index=3}
+                HTuple info, devices;
+                HOperatorSet.InfoFramegrabber(_iface, "device", out info, out devices);
+
+                if (devices == null || devices.Length == 0)
+                {
+                    MessageBox.Show("HALCON không thấy GigE camera.\nHãy kiểm tra: camera online, cùng subnet, tắt firewall/antivirus nếu cần, và camera thấy trong tool hãng.");
+                    return;
+                }
+
+                var list = new List<GigECamItem>();
+                for (int i = 0; i < devices.Length; i++)
+                {
+                    string dev = devices[i].S;
+
+                    // Hiển thị cơ bản: bạn có thể đổi format sau (model | SN | IP… nếu query thêm)
+                    list.Add(new GigECamItem
+                    {
+                        Device = dev,
+                        Display = dev
+                    });
+                }
+
+                cbCamera.Items.AddRange(list.ToArray());
+                cbCamera.SelectedIndex = 0;
+            }
+            catch (HalconException hex)
+            {
+                MessageBox.Show("Lỗi InfoFramegrabber GigEVision2: " + hex.Message);
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            try
-            {
-                // tạo model QR Code
-                HOperatorSet.CreateDataCode2dModel("QR Code", new HTuple(), new HTuple(), out _qrHandle);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Không tạo được QR model (có thể thiếu license DataCode): " + ex.Message);
-            }
+            LoadGigECameras();
         }
 
-        private void btnStart_Click(object sender, EventArgs e)
+        private HTuple _acqHandle = null;
+
+        //private void OpenSelectedCamera()
+        //{
+        //    if (cbCamera.SelectedItem is not GigECamItem cam) return;
+
+        //    // đóng handle cũ
+        //    if (_acqHandle != null && _acqHandle.Length > 0)
+        //    {
+        //        try { HOperatorSet.CloseFramegrabber(_acqHandle); } catch { }
+        //        _acqHandle = null;
+        //    }
+
+        //    // Device truyền đúng chuỗi lấy từ InfoFramegrabber("device") :contentReference[oaicite:4]{index=4}
+        //    HOperatorSet.OpenFramegrabber(
+        //        _iface,
+        //        0, 0, 0, 0, 0, 0,
+        //        "progressive",
+        //        -1,
+        //        "default",
+        //        -1,
+        //        "false",
+        //        "default",
+        //        cam.Device,   // <-- quan trọng
+        //        0,
+        //        -1,
+        //        out _acqHandle
+        //    ); // :contentReference[oaicite:5]{index=5}
+        //}
+
+        private void btnRefresh_Click(object sender, EventArgs e)
         {
-            if (_running) return;
-
-            try
-            {
-                lock (_camLock)
-                {
-                    // 1) Open camera (đúng tham số bạn copy từ HDevelop)
-                    HOperatorSet.OpenFramegrabber(
-                        "GigEVision2",
-                        0, 0, 0, 0, 0, 0,
-                        "progressive",
-                        -1,
-                        "default",
-                        -1,
-                        "false",
-                        "default",
-                        "Camera1",
-                        0,
-                        -1,
-                        out _acqHandle
-                    );
-                    
-                    TrySetFgParam("ExposureTime", 20000);
-                    // 2) Start grabbing
-                    HOperatorSet.GrabImageStart(_acqHandle, -1);
-                }
-
-                _cts = new CancellationTokenSource();
-                _running = true;
-                Task.Run(() => GrabLoop(_cts.Token));
-            }
-            catch (Exception ex)
-            {
-                _running = false;
-                MessageBox.Show("Start lỗi: " + ex.Message);
-            }
-        }
-
-        private void GrabLoop(CancellationToken token)
-        {
-            while (!token.IsCancellationRequested)
-            {
-                HObject img = null;
-                try
-                {
-                    lock (_camLock)
-                    {
-                        if (_acqHandle == null) continue;
-                        HOperatorSet.GrabImageAsync(out img, _acqHandle, -1);
-                    }
-
-                    BeginInvoke(new Action(() =>
-                    {
-                        try
-                        {
-                            hWindowControl1.HalconWindow.DispObj(img);
-                        }
-                        finally
-                        {
-                            img?.Dispose();
-                        }
-                    }));
-                }
-                catch
-                {
-                    img?.Dispose();
-                    Thread.Sleep(5);
-                }
-            }
-        }
-        private void TrySetFgParam(string name, object value)
-        {
-            try
-            {
-                if (_acqHandle == null) return;
-
-                HTuple hvName = new HTuple(name);
-                HTuple hvValue;
-
-                if (value is string s) hvValue = new HTuple(s);
-                else if (value is int i) hvValue = new HTuple(i);
-                else if (value is double d) hvValue = new HTuple(d);
-                else hvValue = new HTuple(value.ToString());
-
-                HOperatorSet.SetFramegrabberParam(_acqHandle, hvName, hvValue);
-            }
-            catch
-            {
-                // ignore nếu camera/interface không có param đó
-            }
-        }
-        // ======= NÚT ĐỌC QR TRỰC TIẾP TỪ CAMERA =======
-        private void btnReadQR_Click(object sender, EventArgs e)
-        {
-            if (_qrHandle == null)
-            {
-                MessageBox.Show("QR model chưa sẵn sàng (có thể thiếu license DataCode).");
-                return;
-            }
-
-            if (_acqHandle == null)
-            {
-                MessageBox.Show("Bạn chưa Start camera.");
-                return;
-            }
-
-            HObject img = null;
-            HObject symbolXLDs = null;
-
-            try
-            {
-                // 1) Grab 1 frame ngay lúc bấm nút (có lock để không đụng GrabLoop)
-                lock (_camLock)
-                {
-                    if (_acqHandle == null) return;
-                    HOperatorSet.GrabImageAsync(out img, _acqHandle, -1);
-                }
-
-                // 2) Đọc QR
-                HTuple resultHandles, decodedStrings;
-                HOperatorSet.FindDataCode2d(
-                    img,
-                    out symbolXLDs,
-                    _qrHandle,
-                    new HTuple(), new HTuple(),
-                    out resultHandles,
-                    out decodedStrings
-                );
-
-                // 3) Hiển thị ảnh + vùng QR + text
-                hWindowControl1.HalconWindow.DispObj(img);
-
-                if (decodedStrings != null && decodedStrings.Length > 0)
-                {
-                    string qr = decodedStrings[0].S;
-
-                    hWindowControl1.HalconWindow.SetColor("yellow");
-                    hWindowControl1.HalconWindow.DispObj(symbolXLDs);
-
-                    HOperatorSet.DispText(
-                        hWindowControl1.HalconWindow,
-                        "QR: " + qr,
-                        "window",
-                        20, 20,
-                        "green",
-                        "box",
-                        "true"
-                    );
-
-                    MessageBox.Show("Đọc QR: " + qr);
-                }
-                else
-                {
-                    HOperatorSet.DispText(
-                        hWindowControl1.HalconWindow,
-                        "Không tìm thấy QR",
-                        "window",
-                        20, 20,
-                        "red",
-                        "box",
-                        "true"
-                    );
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("ReadQR lỗi: " + ex.Message);
-            }
-            finally
-            {
-                symbolXLDs?.Dispose();
-                img?.Dispose();
-            }
-        }
-
-        private void btnStop_Click(object sender, EventArgs e)
-        {
-            StopCam();
-        }
-
-        private void StopCam()
-        {
-            try
-            {
-                _cts?.Cancel();
-                _cts = null;
-
-                lock (_camLock)
-                {
-                    if (_acqHandle != null)
-                    {
-                        try { HOperatorSet.CloseFramegrabber(_acqHandle); } catch { }
-                        _acqHandle = null;
-                    }
-                }
-
-                if (_qrHandle != null)
-                {
-                    try { HOperatorSet.ClearDataCode2dModel(_qrHandle); } catch { }
-                    _qrHandle = null;
-                }
-            }
-            finally
-            {
-                _running = false;
-            }
+            LoadGigECameras();
         }
     }
 }
