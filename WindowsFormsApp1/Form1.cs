@@ -9,29 +9,28 @@ namespace WindowsFormsApp1
 {
     public partial class Form1 : Form
     {
-    
-
         public Form1()
         {
             InitializeComponent();
-            
         }
+
         public class GigECamItem
         {
-            public string Display { get; set; }   // chuỗi hiển thị
-            public string Device { get; set; }    // chuỗi Device dùng để OpenFramegrabber
+            public string Display { get; set; }
+            public string Device { get; set; }
             public override string ToString() => Display;
-
         }
-        private string _iface = "GigEVision2";   // GigE dùng GigEVision2 :contentReference[oaicite:2]{index=2}
+
+        private string _iface = "GigEVision2";
+        private HTuple _acqHandle = null;
+        private bool _isLiveRunning = false;
+        private CancellationTokenSource _liveCts = null;
 
         private void LoadGigECameras()
         {
             cbCamera.Items.Clear();
-
             try
             {
-                // "device" => list các giá trị hợp lệ cho tham số Device của OpenFramegrabber :contentReference[oaicite:3]{index=3}
                 HTuple info, devices;
                 HOperatorSet.InfoFramegrabber(_iface, "device", out info, out devices);
 
@@ -45,8 +44,6 @@ namespace WindowsFormsApp1
                 for (int i = 0; i < devices.Length; i++)
                 {
                     string dev = devices[i].S;
-
-                    // Hiển thị cơ bản: bạn có thể đổi format sau (model | SN | IP… nếu query thêm)
                     list.Add(new GigECamItem
                     {
                         Device = dev,
@@ -55,7 +52,8 @@ namespace WindowsFormsApp1
                 }
 
                 cbCamera.Items.AddRange(list.ToArray());
-                cbCamera.SelectedIndex = 0;
+                if (cbCamera.Items.Count > 0)
+                    cbCamera.SelectedIndex = 0;
             }
             catch (HalconException hex)
             {
@@ -66,41 +64,212 @@ namespace WindowsFormsApp1
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadGigECameras();
+            HOperatorSet.SetPart(hWindowControl1.HalconWindow, 0, 0, -1, -1);
         }
 
-        private HTuple _acqHandle = null;
+        private void OpenSelectedCamera()
+        {
+            if (!(cbCamera.SelectedItem is GigECamItem cam)) return;
 
-        //private void OpenSelectedCamera()
-        //{
-        //    if (cbCamera.SelectedItem is not GigECamItem cam) return;
+            StopLive();
+            CloseCamera();
 
-        //    // đóng handle cũ
-        //    if (_acqHandle != null && _acqHandle.Length > 0)
-        //    {
-        //        try { HOperatorSet.CloseFramegrabber(_acqHandle); } catch { }
-        //        _acqHandle = null;
-        //    }
+            try
+            {
+                HOperatorSet.OpenFramegrabber(
+                    _iface,
+                    0, 0, 0, 0, 0, 0,
+                    "progressive",
+                    -1,
+                    "default",
+                    -1,
+                    "false",
+                    "default",
+                    cam.Device,
+                    0,
+                    -1,
+                    out _acqHandle
+                );
 
-        //    // Device truyền đúng chuỗi lấy từ InfoFramegrabber("device") :contentReference[oaicite:4]{index=4}
-        //    HOperatorSet.OpenFramegrabber(
-        //        _iface,
-        //        0, 0, 0, 0, 0, 0,
-        //        "progressive",
-        //        -1,
-        //        "default",
-        //        -1,
-        //        "false",
-        //        "default",
-        //        cam.Device,   // <-- quan trọng
-        //        0,
-        //        -1,
-        //        out _acqHandle
-        //    ); // :contentReference[oaicite:5]{index=5}
-        //}
+                if (nudExposure.Value > 0)
+                {
+                    SetExposureTime((double)nudExposure.Value);
+                }
+
+                StartLive();
+            }
+            catch (HalconException hex)
+            {
+                MessageBox.Show($"Lỗi mở camera: {hex.Message}");
+            }
+        }
+
+        private void CloseCamera()
+        {
+            if (_acqHandle != null && _acqHandle.Length > 0)
+            {
+                try
+                {
+                    HOperatorSet.CloseFramegrabber(_acqHandle);
+                }
+                catch { }
+                finally
+                {
+                    _acqHandle = null;
+                }
+            }
+        }
+
+        private void StartLive()
+        {
+            if (_acqHandle == null || _isLiveRunning) return;
+
+            _isLiveRunning = true;
+            _liveCts = new CancellationTokenSource();
+            var token = _liveCts.Token;
+
+            Task.Run(() =>
+            {
+                while (_isLiveRunning && !token.IsCancellationRequested)
+                {
+                    try
+                    {
+                        HObject image = null;
+                        HOperatorSet.GrabImageAsync(out image, _acqHandle, -1);
+
+                        if (image != null && image.IsInitialized())
+                        {
+                            if (hWindowControl1.InvokeRequired)
+                            {
+                                hWindowControl1.Invoke(new Action(() =>
+                                {
+                                    try
+                                    {
+                                        HOperatorSet.DispObj(image, hWindowControl1.HalconWindow);
+                                    }
+                                    catch { }
+                                }));
+                            }
+                            else
+                            {
+                                HOperatorSet.DispObj(image, hWindowControl1.HalconWindow);
+                            }
+
+                            image.Dispose();
+                        }
+                    }
+                    catch (HalconException)
+                    {
+                        Thread.Sleep(10);
+                    }
+                    catch
+                    {
+                        break;
+                    }
+                }
+            }, token);
+        }
+
+        private void StopLive()
+        {
+            _isLiveRunning = false;
+            if (_liveCts != null)
+            {
+                _liveCts.Cancel();
+                _liveCts = null;
+            }
+            Thread.Sleep(100);
+        }
+
+        private void SetExposureTime(double exposureTimeUs)
+        {
+            if (_acqHandle == null || _acqHandle.Length == 0) return;
+
+            try
+            {
+                HOperatorSet.SetFramegrabberParam(_acqHandle, "ExposureTime", exposureTimeUs);
+            }
+            catch (HalconException hex)
+            {
+                try
+                {
+                    HOperatorSet.SetFramegrabberParam(_acqHandle, "ExposureTimeAbs", exposureTimeUs);
+                }
+                catch
+                {
+                    MessageBox.Show($"Lỗi set exposure time: {hex.Message}\n\nThử dùng tên parameter khác hoặc kiểm tra range hợp lệ.");
+                }
+            }
+        }
+
+        private void GetExposureTimeRange()
+        {
+            if (_acqHandle == null || _acqHandle.Length == 0)
+            {
+                MessageBox.Show("Vui lòng mở camera trước!");
+                return;
+            }
+
+            try
+            {
+                HTuple rangeVal;
+
+                try
+                {
+                    HOperatorSet.GetFramegrabberParam(_acqHandle, "ExposureTime_range", out rangeVal);
+                }
+                catch
+                {
+                    HOperatorSet.GetFramegrabberParam(_acqHandle, "ExposureTimeAbs_range", out rangeVal);
+                }
+
+                if (rangeVal != null && rangeVal.Length >= 2)
+                {
+                    double min = rangeVal[0].D;
+                    double max = rangeVal[1].D;
+
+                    nudExposure.Minimum = (decimal)min;
+                    nudExposure.Maximum = (decimal)max;
+
+                    MessageBox.Show($"Exposure range: {min} - {max} µs\n\nĐã cập nhật range cho NumericUpDown.", "Thông tin");
+                }
+                else
+                {
+                    MessageBox.Show("Không lấy được exposure range từ camera.");
+                }
+            }
+            catch (HalconException hex)
+            {
+                MessageBox.Show($"Không lấy được exposure range: {hex.Message}\n\nCamera có thể không hỗ trợ query range.");
+            }
+        }
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
+            StopLive();
+            CloseCamera();
             LoadGigECameras();
+        }
+
+        private void cbCamera_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            OpenSelectedCamera();
+        }
+
+        private void nudExposure_ValueChanged(object sender, EventArgs e)
+        {
+            SetExposureTime((double)nudExposure.Value);
+        }
+
+        private void btnGetExposureRange_Click(object sender, EventArgs e)
+        {
+            GetExposureTimeRange();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            StopLive();
+            CloseCamera();
         }
     }
 }
