@@ -1,0 +1,15 @@
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.csproj.AssemblyReference.cache
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.Form1.resources
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.Properties.Resources.resources
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.csproj.GenerateResource.cache
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\bin\x64\Debug\WindowsFormsApp1.exe.config
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\bin\x64\Debug\WindowsFormsApp1.exe
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\bin\x64\Debug\WindowsFormsApp1.pdb
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\bin\x64\Debug\SunnyUI.Common.dll
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\bin\x64\Debug\SunnyUI.dll
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\bin\x64\Debug\halcondotnet.xml
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\bin\x64\Debug\SunnyUI.Common.xml
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\obj\x64\Debug\WindowsF.A1EEDF9B.Up2Date
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.exe
+C:\Users\Administrator\source\repos\nguyenhung0303\C_H\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.pdb
