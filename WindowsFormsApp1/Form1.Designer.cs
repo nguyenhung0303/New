@@ -32,12 +32,17 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnReadQR = new Sunny.UI.UIButton();
+            this.btnLoadRoi = new Sunny.UI.UIButton();
+            this.lbRoi = new Sunny.UI.UIListBox();
+            this.btnSave = new Sunny.UI.UIButton();
+            this.btnDrawRoi = new Sunny.UI.UIButton();
             this.uiLabel1 = new Sunny.UI.UILabel();
             this.btnGetExposureRange = new Sunny.UI.UIButton();
             this.nudExposure = new System.Windows.Forms.NumericUpDown();
             this.btnRefresh = new Sunny.UI.UIButton();
             this.cbCamera = new Sunny.UI.UIComboBox();
-            this.btnReadQR = new System.Windows.Forms.Button();
+            this.uiContextMenuStrip1 = new Sunny.UI.UIContextMenuStrip();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -55,7 +60,6 @@
             this.hWindowControl1.Size = new System.Drawing.Size(905, 499);
             this.hWindowControl1.TabIndex = 0;
             this.hWindowControl1.WindowSize = new System.Drawing.Size(905, 499);
-           
             // 
             // panel1
             // 
@@ -78,17 +82,90 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.btnReadQR);
+            this.panel2.Controls.Add(this.btnLoadRoi);
+            this.panel2.Controls.Add(this.lbRoi);
+            this.panel2.Controls.Add(this.btnSave);
+            this.panel2.Controls.Add(this.btnDrawRoi);
             this.panel2.Controls.Add(this.uiLabel1);
             this.panel2.Controls.Add(this.btnGetExposureRange);
             this.panel2.Controls.Add(this.nudExposure);
             this.panel2.Controls.Add(this.btnRefresh);
             this.panel2.Controls.Add(this.cbCamera);
-            this.panel2.Controls.Add(this.btnReadQR);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel2.Location = new System.Drawing.Point(905, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(178, 499);
             this.panel2.TabIndex = 6;
+            // 
+            // btnReadQR
+            // 
+            this.btnReadQR.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnReadQR.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnReadQR.Location = new System.Drawing.Point(31, 94);
+            this.btnReadQR.MinimumSize = new System.Drawing.Size(1, 1);
+            this.btnReadQR.Name = "btnReadQR";
+            this.btnReadQR.ShowFocusLine = true;
+            this.btnReadQR.Size = new System.Drawing.Size(100, 38);
+            this.btnReadQR.TabIndex = 13;
+            this.btnReadQR.Text = "QR";
+            this.btnReadQR.TipsFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnReadQR.Click += new System.EventHandler(this.btnReadQR_Click);
+            // 
+            // btnLoadRoi
+            // 
+            this.btnLoadRoi.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnLoadRoi.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnLoadRoi.Location = new System.Drawing.Point(42, 330);
+            this.btnLoadRoi.MinimumSize = new System.Drawing.Size(1, 1);
+            this.btnLoadRoi.Name = "btnLoadRoi";
+            this.btnLoadRoi.Size = new System.Drawing.Size(100, 38);
+            this.btnLoadRoi.TabIndex = 12;
+            this.btnLoadRoi.Text = "Load";
+            this.btnLoadRoi.TipsFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnLoadRoi.Click += new System.EventHandler(this.btnLoadRoi_Click);
+            // 
+            // lbRoi
+            // 
+            this.lbRoi.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.lbRoi.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(200)))), ((int)(((byte)(255)))));
+            this.lbRoi.ItemSelectForeColor = System.Drawing.Color.White;
+            this.lbRoi.Location = new System.Drawing.Point(29, 385);
+            this.lbRoi.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.lbRoi.MinimumSize = new System.Drawing.Size(1, 1);
+            this.lbRoi.Name = "lbRoi";
+            this.lbRoi.Padding = new System.Windows.Forms.Padding(2);
+            this.lbRoi.ShowText = false;
+            this.lbRoi.Size = new System.Drawing.Size(132, 100);
+            this.lbRoi.TabIndex = 11;
+            this.lbRoi.Text = "uiListBox1";
+            this.lbRoi.SelectedIndexChanged += new System.EventHandler(this.lbRoi_SelectedIndexChanged);
+            // 
+            // btnSave
+            // 
+            this.btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSave.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSave.Location = new System.Drawing.Point(42, 286);
+            this.btnSave.MinimumSize = new System.Drawing.Size(1, 1);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(100, 38);
+            this.btnSave.TabIndex = 10;
+            this.btnSave.Text = "Save";
+            this.btnSave.TipsFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // btnDrawRoi
+            // 
+            this.btnDrawRoi.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnDrawRoi.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnDrawRoi.Location = new System.Drawing.Point(42, 242);
+            this.btnDrawRoi.MinimumSize = new System.Drawing.Size(1, 1);
+            this.btnDrawRoi.Name = "btnDrawRoi";
+            this.btnDrawRoi.Size = new System.Drawing.Size(100, 38);
+            this.btnDrawRoi.TabIndex = 9;
+            this.btnDrawRoi.Text = "Draw Roi";
+            this.btnDrawRoi.TipsFont = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnDrawRoi.Click += new System.EventHandler(this.btnDrawRoi_Click);
             // 
             // uiLabel1
             // 
@@ -104,7 +181,7 @@
             // 
             this.btnGetExposureRange.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnGetExposureRange.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnGetExposureRange.Location = new System.Drawing.Point(42, 219);
+            this.btnGetExposureRange.Location = new System.Drawing.Point(42, 198);
             this.btnGetExposureRange.MinimumSize = new System.Drawing.Size(1, 1);
             this.btnGetExposureRange.Name = "btnGetExposureRange";
             this.btnGetExposureRange.Size = new System.Drawing.Size(100, 38);
@@ -174,14 +251,12 @@
             this.cbCamera.Watermark = "";
             this.cbCamera.SelectedIndexChanged += new System.EventHandler(this.cbCamera_SelectedIndexChanged);
             // 
-            // btnReadQR
+            // uiContextMenuStrip1
             // 
-            this.btnReadQR.Location = new System.Drawing.Point(42, 119);
-            this.btnReadQR.Name = "btnReadQR";
-            this.btnReadQR.Size = new System.Drawing.Size(75, 23);
-            this.btnReadQR.TabIndex = 3;
-            this.btnReadQR.Text = "QR";
-            this.btnReadQR.UseVisualStyleBackColor = true;
+            this.uiContextMenuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(249)))), ((int)(((byte)(255)))));
+            this.uiContextMenuStrip1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.uiContextMenuStrip1.Name = "uiContextMenuStrip1";
+            this.uiContextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
             // Form1
             // 
@@ -205,7 +280,6 @@
 
         private HalconDotNet.HWindowControl hWindowControl1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btnReadQR;
         private Sunny.UI.UIComboBox cbCamera;
         private Sunny.UI.UIButton btnRefresh;
         private System.Windows.Forms.Panel panel2;
@@ -213,6 +287,12 @@
         private Sunny.UI.UILabel uiLabel1;
         private Sunny.UI.UIButton btnGetExposureRange;
         private System.Windows.Forms.NumericUpDown nudExposure;
+        private Sunny.UI.UIButton btnSave;
+        private Sunny.UI.UIButton btnDrawRoi;
+        private Sunny.UI.UIContextMenuStrip uiContextMenuStrip1;
+        private Sunny.UI.UIListBox lbRoi;
+        private Sunny.UI.UIButton btnLoadRoi;
+        private Sunny.UI.UIButton btnReadQR;
     }
 }
 
